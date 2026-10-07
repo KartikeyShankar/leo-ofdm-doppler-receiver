@@ -1,6 +1,6 @@
 # Doppler-Robust OFDM Receiver for LEO Satellite Links
 
-**Problem:** A fast-moving LEO satellite shifts the carrier frequency by tens of kHz, which breaks OFDM subcarrier orthogonality. This project studies how to estimate and correct that offset, and w[...]
+**Problem:** A fast-moving LEO satellite shifts the carrier frequency by tens of kHz, which breaks OFDM subcarrier orthogonality. This project studies how to estimate and correct that offset, and what it costs in 16-bit fixed-point hardware.
 
 **Status:** Phases 1-3 done and validated. Phase 4 (estimator improvement + Q15 fixed-point) in progress.
 
@@ -21,8 +21,8 @@ Everything is written from scratch in plain Octave/MATLAB (no toolboxes). Run `p
 
 ## Phase 3 - LEO Doppler and CFO estimation
 - Overhead pass model: 520 km circular orbit, 2 GHz carrier (assumed values). Max Doppler about 46 kHz (3 subcarriers at 15 kHz spacing), max Doppler rate about 690 Hz/s.
-- Moose estimator (two identical pilot symbols) only works up to +-0.4 subcarrier = +-6 kHz, so the raw Doppler must be pre-compensated by at least 87% (in practice from GNSS + ephemeris) and the [...]
-- Link modelled as AWGN + CFO (LOS-dominant). Without correction the link is dead for any CFO > 0; with the true CFO known it matches AWGN theory; with the Moose estimate it works up to +-0.3 but [...]
+- Moose estimator (two identical pilot symbols) only works up to +-0.4 subcarrier = +-6 kHz, so the raw Doppler must be pre-compensated by at least 87% (in practice from GNSS + ephemeris) and the receiver estimates the residual.
+- Link modelled as AWGN + CFO (LOS-dominant). Without correction the link is dead for any CFO > 0; with the true CFO known it matches AWGN theory; with the Moose estimate it works up to +-0.3 but sits about 10 dB above the ideal BER at 6 dB, because estimation noise accumulates as phase drift over the frame. Beyond +-0.5 the estimate wraps and fails.
 
 ![LEO pass](results/phase3_pass.png)
 ![CFO results](results/phase3_cfo.png)
